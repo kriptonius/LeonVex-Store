@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>LeonVex Co. · Mayorista</title>
-<meta name="description" content="Catálogo mayorista: abarrotes, dulces y aguas de mesa. Arma tu pedido y envíalo por WhatsApp.">
+<title>LeonVex Co.</title>
+<meta name="description" content="Abarrotes, dulces y aguas de mesa. Arma tu pedido y envíalo por WhatsApp.">
 <meta name="theme-color" content="#171512">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f0a91a'/%3E%3Ctext x='32' y='43' font-family='Arial' font-weight='900' font-size='30' text-anchor='middle' fill='%232b1c00'%3ELV%3C/text%3E%3C/svg%3E">
 <style>
@@ -162,7 +162,7 @@ const WA_DEFAULT = "51963845681";         // WhatsApp que recibe pedidos (el due
 const WA_ESSTRADA = "51963845681";        // contacto de ESSTRADA Co.
 const DEF = {
   nombre: "LeonVex Co.",
-  lema: "Mayorista · Abarrotes, dulces y aguas de mesa",
+  lema: "Abarrotes, dulces y aguas de mesa",
   whatsapp: WA_DEFAULT,
   horario: "",
   direccion: "",
@@ -234,7 +234,7 @@ async function load() {
     const s = await getDoc(ref);
     if (s.exists()) { applyDoc(s.data()); cacheSave(); } else { S.exists = false; S.cfg = null; S.prods = []; }
     S.error = "";
-  } catch (e) { if (!S.cfg) S.error = "No pudimos cargar el catálogo. Revisa tu internet e intenta de nuevo."; }
+  } catch (e) { if (!S.cfg) S.error = "No pudimos cargar el catálogo. Revisa tu internet e intenta de nuevo."; S.errCode = (e && (e.code || e.message)) || "desconocido"; }
   S.loaded = true; restoreCart(); render();
 }
 async function commit(list, extra) {
@@ -294,9 +294,9 @@ function renderBar() {
 }
 function renderShop() {
   const c = cfg();
-  document.title = c.nombre + " · Mayorista";
+  document.title = c.nombre;
   if (!S.loaded) { $("#app").innerHTML = '<div class="load">Cargando catálogo…</div>'; return; }
-  if (S.error) { $("#app").innerHTML = `<div class="load">${esc(S.error)}<br><br><button class="btn gold" onclick="location.reload()">Reintentar</button></div>`; return; }
+  if (S.error) { $("#app").innerHTML = `<div class="load">${esc(S.error)}<br><br><button class="btn gold" onclick="location.reload()">Reintentar</button><p class="hint" style="margin-top:18px">Detalle técnico: ${esc(S.errCode || "")}</p></div>`; return; }
   const tags = [c.horario, c.pedidoMin > 0 ? "Pedido mínimo " + money(c.pedidoMin) : "", c.delivery].filter(Boolean);
   const datos = [["Horario", c.horario], ["Dirección", c.direccion], ["Delivery", c.delivery], ["Pedido mínimo", c.pedidoMin > 0 ? money(c.pedidoMin) : ""]].filter(r => r[1]);
   $("#app").innerHTML = `
@@ -421,7 +421,7 @@ function negTab() {
   const c = cfg(), url = location.origin + location.pathname;
   return `<div class="box"><h3>Link de tu tienda</h3><p class="hint">Compártelo con tus clientes (estados, grupos, Facebook).</p>
       <div class="url">${esc(url)}</div>
-      <div class="row2"><button class="btn ghost sm" data-act="copy">Copiar link</button><a class="btn wa sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent("Mira nuestro catálogo mayorista y haz tu pedido aquí: " + url)}">Compartir</a></div></div>
+      <div class="row2"><button class="btn ghost sm" data-act="copy">Copiar link</button><a class="btn wa sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent("Mira nuestro catálogo y haz tu pedido aquí: " + url)}">Compartir</a></div></div>
     <form id="fn" class="box"><h3>Datos del negocio</h3>
       <label class="lb">Nombre</label><input class="fld" name="nombre" value="${esc(c.nombre)}">
       <label class="lb">Frase debajo del nombre</label><input class="fld" name="lema" value="${esc(c.lema)}">
